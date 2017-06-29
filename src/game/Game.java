@@ -45,7 +45,7 @@ public class Game {
                 player.setBoardMark(X);
                 player.setOpponentBoardMark(O);
                 player.setGame(game);
-                player2 = new players.MinimaxPlayer(depth);
+                player2 = new players.AlphaBetaPlayer(depth);
                 //Define player 2 class
                 /*
                 if (displayOtello != null) {

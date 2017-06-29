@@ -10,12 +10,12 @@ import game.OthelloGame;
  * @author Kristof Dinkgräve
  * @author Jan Abelmann
  */
-public class MinimaxPlayer extends AbstractPlayer {
+public class AlphaBetaPlayer extends AbstractPlayer {
 
     private OthelloGame game;
     private Move bestMove = null;
 
-    public MinimaxPlayer(int depth) {
+    public AlphaBetaPlayer(int depth){
         super(depth);
     }
 
@@ -23,22 +23,25 @@ public class MinimaxPlayer extends AbstractPlayer {
     public BoardSquare play(int[][] tab) {
         game = new OthelloGame();
         long time = System.currentTimeMillis();
-        minimax(tab, getDepth(), getMyBoardMark());
+        alphaBeta(tab, getDepth(), getMyBoardMark(), Integer.MIN_VALUE, Integer.MAX_VALUE);
         System.out.println(System.currentTimeMillis()-time + "ms");
         return bestMove.getBoardPlace();
     }
 
-    private int minimax(int[][] bord, int depth, int mark) {
+    private int alphaBeta(int[][] bord, int depth, int mark, int alpha, int beta) {
         if (depth == 0 || game.getValidMoves(bord, mark).size() == 0) {
             return evaluate(bord);
         }
 
         if (mark == getMyBoardMark()) {
-            int best = Integer.MIN_VALUE;
+            int best = alpha;
             for (Move move : game.getValidMoves(bord, getMyBoardMark())) {
-                int temp = minimax(move.getBoard(), depth - 1, getOpponentBoardMark());
+                int temp = alphaBeta(move.getBoard(), depth - 1, getOpponentBoardMark(), best, beta);
                 if (best < temp) {
                     best = temp;
+                    if (best >= beta) {
+                        break;
+                    }
                     if (depth == getDepth()) {
                         bestMove = move;
                     }
@@ -46,13 +49,20 @@ public class MinimaxPlayer extends AbstractPlayer {
             }
             return best;
         } else {
-            int best = Integer.MAX_VALUE;
+            int best = beta;
             for (Move move : game.getValidMoves(bord, getOpponentBoardMark())) {
-                int temp = minimax(move.getBoard(), depth - 1, getMyBoardMark());
-                best = Math.min(best, temp);
+                int temp = alphaBeta(move.getBoard(), depth - 1, getMyBoardMark(), alpha, best);
+                if (best > temp) {
+                    best = temp;
+                    if (best <= alpha) {
+                        break;
+                    }
+                }
+
             }
             return best;
         }
+
     }
 
     private int evaluate(int[][] bord) {
@@ -144,3 +154,27 @@ public class MinimaxPlayer extends AbstractPlayer {
         return mark;
     }
 }
+
+/*
+int miniMax(int spieler, int tiefe, int alpha, int beta) {
+    if (tiefe == 0 or keineZuegeMehr(spieler))
+       return bewerten(spieler);
+    int maxWert = alpha;
+    generiereMoeglicheZuege(spieler);
+    while (noch Zug da) {
+       fuehreNaechstenZugAus();
+       int wert = -miniMax(-spieler, tiefe-1,
+                           -beta, -maxWert);
+       macheZugRueckgaengig();
+       if (wert > maxWert) {
+          maxWert = wert;
+          if (maxWert >= beta)
+             break;
+          if (tiefe == anfangstiefe)
+             gespeicherterZug = Zug;
+       }
+    }
+    return maxWert;
+ }
+
+ */
