@@ -45,12 +45,15 @@ public class Game {
                 player.setBoardMark(X);
                 player.setOpponentBoardMark(O);
                 player.setGame(game);
+                player2 = new players.MinimaxPlayer(depth);
                 //Define player 2 class
+                /*
                 if (displayOtello != null) {
                     player2 = new players.HumanPlayerDisplay(depth);
                 } else {
                     player2 = new players.HumanPlayer(depth);
                 }
+                */
                 player2.setBoardMark(O);
                 player2.setOpponentBoardMark(X);
                 player2.setGame(game);
