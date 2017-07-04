@@ -22,10 +22,13 @@ public class AlphaBetaPlayer extends AbstractPlayer {
     @Override
     public BoardSquare play(int[][] tab) {
         game = new OthelloGame();
-        long time = System.currentTimeMillis();
+        bestMove = null;
         alphaBeta(tab, getDepth(), getMyBoardMark(), Integer.MIN_VALUE, Integer.MAX_VALUE);
-        System.out.println(System.currentTimeMillis()-time + "ms");
-        return bestMove.getBoardPlace();
+        if (bestMove != null) {
+            return bestMove.getBoardPlace();
+        } else {
+            return new BoardSquare(-1, -1);
+        }
     }
 
     private int alphaBeta(int[][] bord, int depth, int mark, int alpha, int beta) {
@@ -89,44 +92,47 @@ public class AlphaBetaPlayer extends AbstractPlayer {
 
     private int corner(int[][] bord, int markBord) {
         int mark = 0;
+        int corner = 9;
+        int subCorner = 5;
+
         if (bord[0][0] == markBord) {
-            mark = mark + 6;
+            mark = mark + corner;
         }
         if (bord[0][1] == markBord) {
-            mark = mark + 4;
+            mark = mark + subCorner;
         }
         if (bord[1][0] == markBord) {
-            mark = mark + 4;
+            mark = mark + subCorner;
         }
 
         if (bord[0][bord[0].length - 1] == markBord) {
-            mark = mark + 6;
+            mark = mark + corner;
         }
         if (bord[0][bord[0].length - 2] == markBord) {
-            mark = mark + 4;
+            mark = mark + subCorner;
         }
         if (bord[1][bord[0].length - 1] == markBord) {
-            mark = mark + 4;
+            mark = mark + subCorner;
         }
 
         if (bord[bord.length - 1][0] == markBord) {
-            mark = mark + 6;
+            mark = mark + corner;
         }
         if (bord[bord.length - 1][1] == markBord) {
-            mark = mark + 4;
+            mark = mark + subCorner;
         }
         if (bord[bord.length - 2][0] == markBord) {
-            mark = mark + 4;
+            mark = mark + subCorner;
         }
 
         if (bord[bord.length - 1][bord[0].length - 1] == markBord) {
-            mark = mark + 6;
+            mark = mark + corner;
         }
         if (bord[bord.length - 1][bord[0].length - 2] == markBord) {
-            mark = mark + 4;
+            mark = mark + subCorner;
         }
         if (bord[bord.length - 2][bord[0].length - 1] == markBord) {
-            mark = mark + 4;
+            mark = mark + subCorner;
         }
 
         return mark;
@@ -154,27 +160,3 @@ public class AlphaBetaPlayer extends AbstractPlayer {
         return mark;
     }
 }
-
-/*
-int miniMax(int spieler, int tiefe, int alpha, int beta) {
-    if (tiefe == 0 or keineZuegeMehr(spieler))
-       return bewerten(spieler);
-    int maxWert = alpha;
-    generiereMoeglicheZuege(spieler);
-    while (noch Zug da) {
-       fuehreNaechstenZugAus();
-       int wert = -miniMax(-spieler, tiefe-1,
-                           -beta, -maxWert);
-       macheZugRueckgaengig();
-       if (wert > maxWert) {
-          maxWert = wert;
-          if (maxWert >= beta)
-             break;
-          if (tiefe == anfangstiefe)
-             gespeicherterZug = Zug;
-       }
-    }
-    return maxWert;
- }
-
- */
